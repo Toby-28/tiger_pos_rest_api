@@ -6,6 +6,7 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 @Injectable()
 export class ArticleService {
   constructor(private prisma: PrismaService) {}
+
   create(createArticleDto: CreateArticleDto) {
     return this.prisma.article.create({ data: createArticleDto });
   }
