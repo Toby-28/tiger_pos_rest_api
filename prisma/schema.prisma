@@ -21,13 +21,54 @@ model Article {
 
 model Barcodes {
   id         Int      @id @default(autoincrement())
-  itemId     Int
-  itemUnitId Int
+  itemsId    Int      @unique
+  itemUnitId Int      @unique
   unitId     Int
   lineNr     Int
-  barcode    String
+  barcode    String   @unique
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  itemId Items @relation(fields: [itemsId], references: [id])
+
   @@map("barcodes")
+}
+
+model Items {
+  id                 Int      @id @default(autoincrement())
+  status             String?  @default("passive")
+  code               String   @unique
+  eCode              String?  @default("")
+  active             Boolean? @default(false)
+  eActive            Boolean? @default(false)
+  cardType           Int
+  name               String
+  name2              String?  @default("")
+  name3              String?  @default("")
+  name4              String?  @default("")
+  specode1           String?  @default("")
+  specode2           String?  @default("")
+  specode3           String?  @default("")
+  specode4           String?  @default("")
+  specode5           String?  @default("")
+  keyword1           String?  @default("")
+  keyword2           String?  @default("")
+  keyword3           String?  @default("")
+  keyword4           String?  @default("")
+  keyword5           String?  @default("")
+  origin             String?  @default("")
+  category           String
+  mainUnit           String
+  mainUnitId         Int
+  brandId            Int
+  variationCode      String?  @default("")
+  reyonCode          String
+  producerCode       String
+  salesLimitQuantity Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  Barcodes Barcodes?
+
+  @@map("items")
 }

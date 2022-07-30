@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateBarcodeDto } from './dto/create-barcode.dto';
 import { UpdateBarcodeDto } from './dto/update-barcode.dto';
 import { QueryBarcodeDTO } from './dto/query-barcode.dto';
+import { FindOneBarcodeDTO } from './dto/find-one-barcode.dto';
 
 @Injectable()
 export class BarcodesService {
@@ -13,9 +14,8 @@ export class BarcodesService {
   }
 
   findAll(params: QueryBarcodeDTO) {
-    let take = params.take ? parseInt(params.take.toString()) : 10;
-    let skip = params.skip ? parseInt(params.skip.toString()) : 0;
-    // let include = params.include ?
+    let take = params.take ? +params.take : 10;
+    let skip = params.skip ? +params.skip : 0;
 
     return this.prisma.barcodes.findMany({
       skip: skip,
@@ -23,8 +23,10 @@ export class BarcodesService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} barcode`;
+  findOne(id: number, query: FindOneBarcodeDTO) {
+    let where = query.type === 'id' ? { id: id } : { barcode: id.toString() };
+
+    return this.prisma.barcodes.findUnique({ where: where });
   }
 
   update(id: number, updateBarcodeDto: UpdateBarcodeDto) {
