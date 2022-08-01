@@ -2,84 +2,84 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CartTypeEnums } from '../enums/CartTypeEnums';
 
 export class CreateItemDto {
-  @ApiProperty({ required: true })
+  @ApiProperty({})
   code: string;
 
-  @ApiProperty({})
-  eCode?: string;
+  @ApiProperty({ required: false })
+  eCode: string;
 
-  @ApiProperty({})
-  producerCode?: string;
+  @ApiProperty({ required: false })
+  producerCode: string;
 
-  @ApiProperty({})
-  active?: boolean;
+  @ApiProperty({ required: false })
+  active: boolean;
 
-  @ApiProperty({ required: true, enum: CartTypeEnums })
+  @ApiProperty({ enum: CartTypeEnums })
   cardType: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({})
   name: string;
 
-  @ApiProperty({})
-  name2?: string;
+  @ApiProperty({ required: false })
+  name2: string;
+
+  @ApiProperty({ required: false })
+  name3: string;
+
+  @ApiProperty({ required: false })
+  name4: string;
+
+  @ApiProperty({ required: false })
+  specode1: string;
+
+  @ApiProperty({ required: false })
+  specode2: string;
+
+  @ApiProperty({ required: false })
+  specode3: string;
+
+  @ApiProperty({ required: false })
+  specode4: string;
+
+  @ApiProperty({ required: false })
+  specode5: string;
+
+  @ApiProperty({ required: false })
+  keyword1: string;
+
+  @ApiProperty({ required: false })
+  keyword2: string;
+
+  @ApiProperty({ required: false })
+  keyword3: string;
+
+  @ApiProperty({ required: false })
+  keyword4: string;
+
+  @ApiProperty({ required: false })
+  keyword5: string;
+
+  @ApiProperty({ required: false })
+  origin: string;
+
+  @ApiProperty({ required: false })
+  category: string;
 
   @ApiProperty({})
-  name3?: string;
-
-  @ApiProperty({})
-  name4?: string;
-
-  @ApiProperty({})
-  specode1?: string;
-
-  @ApiProperty({})
-  specode2?: string;
-
-  @ApiProperty({})
-  specode3?: string;
-
-  @ApiProperty({})
-  specode4?: string;
-
-  @ApiProperty({})
-  specode5?: string;
-
-  @ApiProperty({})
-  keyword1?: string;
-
-  @ApiProperty({})
-  keyword2?: string;
-
-  @ApiProperty({})
-  keyword3?: string;
-
-  @ApiProperty({})
-  keyword4?: string;
-
-  @ApiProperty({})
-  keyword5?: string;
-
-  @ApiProperty({})
-  origin?: string;
-
-  @ApiProperty({})
-  category?: string;
-
-  @ApiProperty({ required: true })
   mainUnit: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({})
   mainUnitId: number;
 
-  @ApiProperty({})
-  brandId?: number;
+  @ApiProperty({ required: false })
+  brandId: number;
 
-  @ApiProperty({})
-  variationCode?: string;
+  @ApiProperty({ required: false })
+  variationCode: string;
 
-  @ApiProperty({})
-  reyonCode?: string;
+  @ApiProperty({ required: false })
+  reyonCode: string;
 
-  @ApiProperty({})
-  salesLimitQuantity?: number;
+  @ApiProperty({ required: false })
+  salesLimitQuantity: number;
 }

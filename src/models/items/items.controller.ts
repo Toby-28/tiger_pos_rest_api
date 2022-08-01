@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { QueryItemsDTO } from './dto/query-items.dto';
+import { FindAllItemsDTO } from './dto/find-all-items.dto';
 
 @ApiTags('Items')
 @Controller('items')
@@ -15,8 +15,8 @@ export class ItemsController {
   }
 
   @Get()
-  findAll(@Param() params: QueryItemsDTO) {
-    return this.itemsService.findAll(params);
+  findAll(@Query() query: FindAllItemsDTO) {
+    return this.itemsService.findAll(query);
   }
 
   @Get(':id')
