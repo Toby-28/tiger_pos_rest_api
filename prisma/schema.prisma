@@ -38,33 +38,33 @@ model Items {
   id                 Int      @id @default(autoincrement())
   status             String?  @default("passive")
   code               String   @unique
-  eCode              String?  @default("")
-  active             Boolean? @default(false)
-  eActive            Boolean? @default(false)
+  eCode              String?
+  active             Boolean?
+  eActive            Boolean?
   cardType           Int
   name               String
-  name2              String?  @default("")
-  name3              String?  @default("")
-  name4              String?  @default("")
-  specode1           String?  @default("")
-  specode2           String?  @default("")
-  specode3           String?  @default("")
-  specode4           String?  @default("")
-  specode5           String?  @default("")
-  keyword1           String?  @default("")
-  keyword2           String?  @default("")
-  keyword3           String?  @default("")
-  keyword4           String?  @default("")
-  keyword5           String?  @default("")
-  origin             String?  @default("")
-  category           String
+  name2              String?
+  name3              String?
+  name4              String?
+  specode1           String?
+  specode2           String?
+  specode3           String?
+  specode4           String?
+  specode5           String?
+  keyword1           String?
+  keyword2           String?
+  keyword3           String?
+  keyword4           String?
+  keyword5           String?
+  origin             String?
+  category           String?
   mainUnit           String
   mainUnitId         Int
-  brandId            Int
-  variationCode      String?  @default("")
-  reyonCode          String
-  producerCode       String
-  salesLimitQuantity Int
+  brandId            Int?
+  variationCode      String?
+  reyonCode          String?
+  producerCode       String?
+  salesLimitQuantity Int?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 

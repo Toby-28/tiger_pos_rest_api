@@ -1,29 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateItemDto } from './dto/create-item.dto';
-import { UpdateItemDto } from './dto/update-item.dto';
+import { QueryItemsDTO } from './dto/query-items.dto';
 
 @Injectable()
 export class ItemsService {
   constructor(private prisma: PrismaService) {}
 
-  create(createItemDto: CreateItemDto) {
-    return this.prisma.items.create({ data: createItemDto });
+  create(data: CreateItemDto) {
+    return this.prisma.items.create({
+      data,
+    });
   }
 
-  findAll() {
-    return `This action returns all items`;
+  findAll(params: QueryItemsDTO) {
+    let take = params.take ? +params.take : 10;
+    let skip = params.skip ? +params.skip : 0;
+
+    return this.prisma.items.findMany({ take: take, skip: skip });
   }
 
   findOne(id: number) {
     return `This action returns a #${id} item`;
-  }
-
-  update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} item`;
   }
 }

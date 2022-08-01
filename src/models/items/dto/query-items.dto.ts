@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class QueryBarcodeDTO {
+export class QueryItemsDTO {
   @ApiProperty({ required: false })
   skip?: number;
 
@@ -8,5 +8,11 @@ export class QueryBarcodeDTO {
   take?: number;
 
   @ApiProperty({ required: false })
-  include?: string;
+  orderName?: string;
+
+  @ApiProperty({ required: false, enum: ['asc', 'desc'] })
+  orderType?: string;
+
+  @ApiProperty({ required: false })
+  include?: string[];
 }

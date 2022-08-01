@@ -5,6 +5,6 @@ export class FindOneBarcodeDTO {
   @ApiProperty({ required: true, enum: ['id', 'barcode'] })
   type: string;
 
-  @ApiProperty({ required: false, enum: BarcodeRelationEnum })
-  include?: string;
+  @ApiProperty({ required: false, enum: BarcodeRelationEnum, isArray: true })
+  include: string;
 }

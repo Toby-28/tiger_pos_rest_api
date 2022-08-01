@@ -1,5 +1,5 @@
 export enum BarcodeRelationEnum {
-  Item = 'item',
-  ItemUnit = 'itemUnit',
-  Unit = 'unit',
+  Item = 'itemId',
+  ItemUnit = 'itemUnitId',
+  Unit = 'unitId',
 }
