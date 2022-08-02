@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { FindAllItemsDTO } from './dto/find-all-items.dto';
+import { FindOneQueryDTO } from './dto/find-one-query.dto';
 
 // Custom Functions
 function checkInclude(queryInclude) {
@@ -46,7 +47,23 @@ export class ItemsService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} item`;
+  async findOne(id: any, query: FindOneQueryDTO) {
+    id = query.type !== 'code' ? +id : id;
+
+    let include = checkInclude(query.include);
+    let where = {};
+    let result = {};
+
+    query.type !== 'barcode'
+      ? ((where = query.type === 'id' ? { id: id } : { code: id.toString() }),
+        (result = await this.prisma.items.findUnique({
+          where: where,
+          include,
+        })))
+      : (result = await this.prisma.barcodes.findUnique({
+          where: { barcode: id.toString() },
+          include: { itemId: true },
+        }));
+    return result;
   }
 }

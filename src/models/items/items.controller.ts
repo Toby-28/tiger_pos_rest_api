@@ -3,6 +3,7 @@ import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { FindAllItemsDTO } from './dto/find-all-items.dto';
+import { FindOneQueryDTO } from './dto/find-one-query.dto';
 
 @ApiTags('Items')
 @Controller('items')
@@ -20,7 +21,7 @@ export class ItemsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.itemsService.findOne(+id);
+  findOne(@Param('id') id: string, @Query() query: FindOneQueryDTO) {
+    return this.itemsService.findOne(id, query);
   }
 }
