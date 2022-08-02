@@ -69,6 +69,53 @@ model Items {
   updatedAt          DateTime @updatedAt
 
   Barcodes Barcodes?
+  Brands   Brands?   @relation(fields: [brandId], references: [id])
 
   @@map("items")
+}
+
+model Brands {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Items Items[]
+
+  @@map("brands")
+}
+
+model Cases {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique
+  name       String
+  address    String?
+  address2   String?
+  divisionNr Int      @unique
+  currencyId Int
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  Division Divisions @relation(fields: [divisionNr], references: [nr])
+
+  @@map("cases")
+}
+
+model Divisions {
+  id       Int     @id @default(autoincrement())
+  nr       Int     @unique
+  name     String
+  street   String?
+  doorNr   String?
+  district String?
+  sity     String?
+  country  String?
+  zipCode  String?
+  phone    String?
+
+  Cases Cases?
+
+  @@map("divisions")
 }

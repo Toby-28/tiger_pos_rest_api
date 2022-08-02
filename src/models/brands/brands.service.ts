@@ -1,26 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBrandDto } from './dto/create-brand.dto';
-import { UpdateBrandDto } from './dto/update-brand.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { FindAllQueryDTO } from './dto/find-all-query.dto';
 
 @Injectable()
 export class BrandsService {
-  create(createBrandDto: CreateBrandDto) {
-    return 'This action adds a new brand';
-  }
+  constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return `This action returns all brands`;
+  findAll(query: FindAllQueryDTO) {
+    let skip = query.skip ? +query.skip : 0;
+    let take = query.take ? +query.take : 10;
+
+    return this.prisma.brands.findMany({
+      take,
+      skip,
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} brand`;
-  }
-
-  update(id: number, updateBrandDto: UpdateBrandDto) {
-    return `This action updates a #${id} brand`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} brand`;
+    return this.prisma.brands.findUnique({ where: { id } });
   }
 }
