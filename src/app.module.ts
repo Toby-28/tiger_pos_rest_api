@@ -8,16 +8,22 @@ import { ItemsModule } from './models/items/items.module';
 import { BrandsModule } from './models/brands/brands.module';
 import { CasesModule } from './models/cases/cases.module';
 import { DivisionsModule } from './models/divisions/divisions.module';
+import { CurrenciesModule } from './models/currencies/currencies.module';
+import { ClientsModule } from './models/clients/clients.module';
+import { DiscountCardsModule } from './models/discount-cards/discount-cards.module';
 
 @Module({
   imports: [
     PrismaModule,
-    ArticleModule,
+    // ArticleModule,
     BarcodesModule,
     ItemsModule,
     BrandsModule,
     CasesModule,
     DivisionsModule,
+    CurrenciesModule,
+    ClientsModule,
+    DiscountCardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -98,7 +98,8 @@ model Cases {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  Division Divisions @relation(fields: [divisionNr], references: [nr])
+  Division Divisions  @relation(fields: [divisionNr], references: [nr])
+  Currency Currencies @relation(fields: [currencyId], references: [id])
 
   @@map("cases")
 }
@@ -118,4 +119,77 @@ model Divisions {
   Cases Cases?
 
   @@map("divisions")
+}
+
+model Currencies {
+  id           Int       @id @default(autoincrement())
+  code         String    @unique
+  name         String
+  synbol       String?
+  activelyUsed Boolean   @default(false)
+  lastRate1    Float?
+  lastRate2    Float?
+  lastRate3    Float?
+  lastRate4    Float?
+  lastRateAt   DateTime?
+
+  Cases Cases[]
+
+  @@map("currencies")
+}
+
+model Clients {
+  id               Int      @id @default(autoincrement())
+  code             String   @unique
+  name             String
+  name2            String?
+  active           Boolean  @default(true)
+  cardType         Int?
+  eCode            String?
+  address          String?
+  address2         String?
+  district         String?
+  town             String?
+  city             String?
+  cityCode         String?
+  country          String?
+  countryCode      String?
+  phoneNumber      String?
+  phoneNumber2     String?
+  email            String?
+  email2           String?
+  email3           String?
+  incharge         String?
+  incharge2        String?
+  incharge3        String?
+  webAddress       String?
+  birthDate        String?
+  exchangeRateType Int?
+  Exchange         Float?
+  discount         Int?
+  specode          String?
+  specode2         String?
+  specode3         String?
+  specode4         String?
+  specode5         String?
+  cyphcode         String?
+  cardNo           String?
+  guid             String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("clients")
+}
+
+model DiscountCards {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  cyphcode  String?
+  specode   String?
+  type      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("discount_cards")
 }
