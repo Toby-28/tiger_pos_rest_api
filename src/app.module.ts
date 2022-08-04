@@ -12,6 +12,8 @@ import { CurrenciesModule } from './models/currencies/currencies.module';
 import { ClientsModule } from './models/clients/clients.module';
 import { DiscountCardsModule } from './models/discount-cards/discount-cards.module';
 import { PricesModule } from './models/prices/prices.module';
+import { UnitsModule } from './models/units/units.module';
+import { UnitSetsModule } from './models/units/unit-sets/unit-sets.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { PricesModule } from './models/prices/prices.module';
     ClientsModule,
     DiscountCardsModule,
     PricesModule,
+    UnitsModule,
+    UnitSetsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -234,13 +234,13 @@ model Units {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  UnitSet UnitSet? @relation(fields: [unitSetId], references: [id])
-  Prices  Prices[]
+  UnitSets UnitSets? @relation(fields: [unitSetId], references: [id])
+  Prices   Prices[]
 
   @@map("units")
 }
 
-model UnitSet {
+model UnitSets {
   id        Int      @id @default(autoincrement())
   code      String   @unique
   name      String
@@ -250,5 +250,5 @@ model UnitSet {
 
   Units Units[]
 
-  @@map("unit-set")
+  @@map("unit-sets")
 }
