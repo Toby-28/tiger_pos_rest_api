@@ -11,6 +11,7 @@ import { DivisionsModule } from './models/divisions/divisions.module';
 import { CurrenciesModule } from './models/currencies/currencies.module';
 import { ClientsModule } from './models/clients/clients.module';
 import { DiscountCardsModule } from './models/discount-cards/discount-cards.module';
+import { PricesModule } from './models/prices/prices.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { DiscountCardsModule } from './models/discount-cards/discount-cards.modu
     CurrenciesModule,
     ClientsModule,
     DiscountCardsModule,
+    PricesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

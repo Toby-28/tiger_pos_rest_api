@@ -70,6 +70,7 @@ model Items {
 
   Barcodes Barcodes?
   Brands   Brands?   @relation(fields: [brandId], references: [id])
+  Prices   Prices[]
 
   @@map("items")
 }
@@ -133,7 +134,8 @@ model Currencies {
   lastRate4    Float?
   lastRateAt   DateTime?
 
-  Cases Cases[]
+  Cases  Cases[]
+  Prices Prices[]
 
   @@map("currencies")
 }
@@ -192,4 +194,61 @@ model DiscountCards {
   updatedAt DateTime @updatedAt
 
   @@map("discount_cards")
+}
+
+model Prices {
+  id         Int      @id @default(autoincrement())
+  code       String   @unique
+  itemId     Int
+  priority   Int?
+  clentcode  String?
+  clcyphcode String?
+  clspecode  String?
+  clspecode2 String?
+  clspecode3 String?
+  clspecode4 String?
+  clspecode5 String?
+  active     Boolean?
+  divisions  Int[]
+  price      Float
+  type       Int?
+  unitId     Int?
+  currencyId Int
+  beginTime  String?
+  endTime    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  Items      Items      @relation(fields: [itemId], references: [id])
+  Currencies Currencies @relation(fields: [currencyId], references: [id])
+  Units      Units?     @relation(fields: [unitId], references: [id])
+
+  @@map("prices")
+}
+
+model Units {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  unitSetId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  UnitSet UnitSet? @relation(fields: [unitSetId], references: [id])
+  Prices  Prices[]
+
+  @@map("units")
+}
+
+model UnitSet {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  specode   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Units Units[]
+
+  @@map("unit-set")
 }

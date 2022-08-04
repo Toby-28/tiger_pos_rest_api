@@ -20,7 +20,7 @@ export class DiscountCardsService {
     let type = findAllDiscountCardsType.findIndex(
       (type) => type === query.type,
     );
-    let where = { type: type };
+    let where = { type: type + 1 };
 
     return this.prisma.discountCards.findMany({ skip, take, where });
   }
