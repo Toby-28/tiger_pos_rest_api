@@ -39,3 +39,6 @@ lerna-debug.log*
 
 # Others
 .example
+
+# Prisma
+prisma/migrations

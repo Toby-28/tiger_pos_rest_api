@@ -4,7 +4,7 @@ export class FindAllDiscountCardsDTO {
   @ApiProperty({ required: false })
   skip: number;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, default: 10 })
   take: number;
 
   @ApiProperty({

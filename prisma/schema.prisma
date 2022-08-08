@@ -106,16 +106,18 @@ model Cases {
 }
 
 model Divisions {
-  id       Int     @id @default(autoincrement())
-  nr       Int     @unique
-  name     String
-  street   String?
-  doorNr   String?
-  district String?
-  sity     String?
-  country  String?
-  zipCode  String?
-  phone    String?
+  id        Int      @id @default(autoincrement())
+  nr        Int      @unique
+  name      String
+  street    String?
+  doorNr    String?
+  district  String?
+  city      String?
+  country   String?
+  zipCode   String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   Cases Cases?
 
@@ -126,13 +128,15 @@ model Currencies {
   id           Int       @id @default(autoincrement())
   code         String    @unique
   name         String
-  synbol       String?
+  symbol       String?
   activelyUsed Boolean   @default(false)
   lastRate1    Float?
   lastRate2    Float?
   lastRate3    Float?
   lastRate4    Float?
-  lastRateAt   DateTime?
+  lastRateDate DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
   Cases  Cases[]
   Prices Prices[]
@@ -176,7 +180,7 @@ model Clients {
   specode5         String?
   cyphcode         String?
   cardNo           String?
-  guid             String?
+  guid             String
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
