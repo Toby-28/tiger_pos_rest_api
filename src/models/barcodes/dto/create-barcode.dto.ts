@@ -1,18 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateBarcodeDto {
-  @ApiProperty({ required: true })
-  itemsId: number;
+  @ApiProperty({})
+  itemId: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({})
   itemUnitId: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({})
   unitId: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({})
   lineNr: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({})
   barcode: string;
 }

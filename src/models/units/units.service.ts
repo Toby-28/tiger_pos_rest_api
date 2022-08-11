@@ -1,4 +1,6 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { LogsService } from 'src/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FindAllUnitsDTO } from './dto/find-all-units.dto';
 import { FindOneUnitDTO } from './dto/find-one-unit.dto';
@@ -15,10 +17,57 @@ function checkInclude(queryInclude) {
     : (include = undefined);
   return include;
 }
+function modifyInputData(data) {
+  let modified = undefined;
+
+  Object.keys(data).forEach((key) => {
+    if (key !== 'createdAt' && key !== 'updatedAt') {
+      modified = { ...modified, [key]: data[key] };
+    }
+  });
+
+  return modified;
+}
 
 @Injectable()
 export class UnitsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly httpService: HttpService,
+    private readonly logService: LogsService,
+  ) {}
+
+  async sync() {
+    const response = await this.httpService.axiosRef.get(
+      `${process.env.url}/api/v2/units`,
+      {
+        auth: {
+          username: process.env.username,
+          password: process.env.password,
+        },
+      },
+    );
+
+    console.log(response.data.length);
+
+    for (let data of response.data) {
+      data = modifyInputData(data);
+
+      try {
+        await this.prisma.units.upsert({
+          where: { code: data.code },
+          update: data,
+          create: data,
+        });
+      } catch (error) {
+        await this.logService.create({
+          log: error,
+          type: 'error',
+          entity: 'units',
+        });
+      }
+    }
+  }
 
   findAll(query: FindAllUnitsDTO) {
     let skip = query.skip ? +query.skip : 0;

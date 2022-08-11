@@ -14,6 +14,7 @@ import { DiscountCardsModule } from './models/discount-cards/discount-cards.modu
 import { PricesModule } from './models/prices/prices.module';
 import { UnitsModule } from './models/units/units.module';
 import { UnitSetsModule } from './models/units/unit-sets/unit-sets.module';
+import { LogsModule } from './logs/logs.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UnitSetsModule } from './models/units/unit-sets/unit-sets.module';
     PricesModule,
     UnitsModule,
     UnitSetsModule,
+    LogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { Currencies } from '@prisma/client';
+import { LogsService } from 'src/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FindAllCurrenciesDTO } from './dto/find-all-currencies.dto';
 import { FindOneCurrencyDTO } from './dto/find-one-currency.dto';
@@ -23,33 +24,42 @@ export class CurrenciesService {
   constructor(
     private prisma: PrismaService,
     private readonly httpService: HttpService,
+    private readonly logService: LogsService,
   ) {}
 
   async sync() {
-    const response = await this.httpService.axiosRef.get(
-      `${process.env.url}/api/v2/currencies`,
-      {
-        auth: {
-          username: process.env.username,
-          password: process.env.password,
+    try {
+      const response = await this.httpService.axiosRef.get(
+        `${process.env.url}/api/v2/currencies`,
+        {
+          auth: {
+            username: process.env.username,
+            password: process.env.password,
+          },
         },
-      },
-    );
+      );
 
-    console.log(response.data.length);
+      console.log(response.data.length);
 
-    for (let data of response.data) {
-      data = modifyInputData(data);
+      for (let data of response.data) {
+        data = modifyInputData(data);
 
-      try {
-        await this.prisma.currencies.upsert({
-          where: { code: data.code },
-          update: data,
-          create: data,
-        });
-      } catch (error) {
-        console.log(error);
+        try {
+          await this.prisma.currencies.upsert({
+            where: { code: data.code },
+            update: data,
+            create: data,
+          });
+        } catch (error) {
+          await this.logService.create({
+            log: error,
+            type: 'error',
+            entity: 'currencies',
+          });
+        }
       }
+    } catch (error) {
+      console.log(error);
     }
   }
 

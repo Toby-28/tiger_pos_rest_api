@@ -21,7 +21,7 @@ model Article {
 
 model Barcodes {
   id         Int      @id @default(autoincrement())
-  itemsId    Int      @unique
+  itemId     Int      @unique
   itemUnitId Int      @unique
   unitId     Int
   lineNr     Int
@@ -29,7 +29,8 @@ model Barcodes {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  itemId Items @relation(fields: [itemsId], references: [id])
+  Items Items @relation(fields: [itemId], references: [id])
+  Units Units @relation(fields: [unitId], references: [id])
 
   @@map("barcodes")
 }
@@ -60,7 +61,7 @@ model Items {
   category           String?
   mainUnit           String
   mainUnitId         Int
-  brandId            Int?
+  brandId            Int
   variationCode      String?
   reyonCode          String?
   producerCode       String?
@@ -68,8 +69,9 @@ model Items {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  Barcodes Barcodes?
   Brands   Brands?   @relation(fields: [brandId], references: [id])
+  Units    Units     @relation(fields: [mainUnitId], references: [id])
+  Barcodes Barcodes?
   Prices   Prices[]
 
   @@map("items")
@@ -238,8 +240,10 @@ model Units {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  UnitSets UnitSets? @relation(fields: [unitSetId], references: [id])
+  UnitSets UnitSets?  @relation(fields: [unitSetId], references: [id])
   Prices   Prices[]
+  Barcodes Barcodes[]
+  Items    Items[]
 
   @@map("units")
 }
@@ -254,5 +258,15 @@ model UnitSets {
 
   Units Units[]
 
-  @@map("unit-sets")
+  @@map("unit_sets")
+}
+
+model Logs {
+  id        Int      @id @default(autoincrement())
+  log       Json
+  type      String
+  entity    String
+  createdAt DateTime @default(now())
+
+  @@map("logs")
 }

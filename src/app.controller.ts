@@ -1,11 +1,17 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
+import { BarcodesService } from './models/barcodes/barcodes.service';
 import { BrandsService } from './models/brands/brands.service';
+import { CasesService } from './models/cases/cases.service';
 import { ClientsService } from './models/clients/clients.service';
 import { CurrenciesService } from './models/currencies/currencies.service';
 import { DiscountCardsService } from './models/discount-cards/discount-cards.service';
 import { DivisionsService } from './models/divisions/divisions.service';
+import { ItemsService } from './models/items/items.service';
+import { PricesService } from './models/prices/prices.service';
+import { UnitSetsService } from './models/units/unit-sets/unit-sets.service';
+import { UnitsService } from './models/units/units.service';
 
 @ApiTags('Sync')
 @Controller()
@@ -17,6 +23,12 @@ export class AppController {
     private readonly currencies: CurrenciesService,
     private readonly clients: ClientsService,
     private readonly discountCards: DiscountCardsService,
+    private readonly items: ItemsService,
+    private readonly unitSets: UnitSetsService,
+    private readonly units: UnitsService,
+    private readonly barcodes: BarcodesService,
+    private readonly prices: PricesService,
+    private readonly cases: CasesService,
   ) {}
 
   @Get()
@@ -26,20 +38,38 @@ export class AppController {
 
   @Get('sync')
   async sync() {
+    console.log(`Brands >------------------------------------`);
     await this.brands.sync();
-    console.log(`Brands >------------------------------------\n`);
 
+    console.log(`Items >-------------------------------------`);
+    await this.items.sync();
+
+    console.log(`UnitSets >----------------------------------`);
+    await this.unitSets.sync();
+
+    console.log(`Units >-------------------------------------`);
+    await this.units.sync();
+
+    console.log(`Barcodes >----------------------------------`);
+    await this.barcodes.sync();
+
+    console.log(`Divisions >---------------------------------`);
     await this.divisions.sync();
-    console.log(`Divisions >---------------------------------\n`);
 
+    console.log(`Currencies >--------------------------------`);
     await this.currencies.sync();
-    console.log(`Currencies >--------------------------------\n`);
 
-    // await this.clients.sync();
-    console.log(`Clients >-----------------------------------\n`);
+    console.log(`Prices >------------------------------------`);
+    await this.prices.sync();
 
+    console.log(`Cases >-------------------------------------`);
+    await this.cases.sync();
+
+    console.log(`Clients >-----------------------------------`);
+    await this.clients.sync();
+
+    console.log(`DiscountCards >-----------------------------`);
     await this.discountCards.sync();
-    console.log(`DiscountCards >-----------------------------\n`);
 
     return;
   }

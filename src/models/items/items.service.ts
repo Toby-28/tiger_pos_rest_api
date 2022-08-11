@@ -1,4 +1,6 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { LogsService } from 'src/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { FindAllItemsDTO } from './dto/find-all-items.dto';
@@ -16,10 +18,66 @@ function checkInclude(queryInclude) {
     : (include = undefined);
   return include;
 }
+function modifyInputData(data) {
+  let modified = undefined;
+
+  Object.keys(data).forEach((key) => {
+    if (key !== 'createdAt' && key !== 'updatedAt') {
+      modified = { ...modified, [key]: data[key] };
+    }
+  });
+
+  return modified;
+}
 
 @Injectable()
 export class ItemsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly httpService: HttpService,
+    private readonly logService: LogsService,
+  ) {}
+
+  async sync() {
+    try {
+      const response = await this.httpService.axiosRef.get(
+        `${process.env.url}/api/v2/items`,
+        {
+          auth: {
+            username: process.env.username,
+            password: process.env.password,
+          },
+        },
+      );
+
+      console.log(response.data.length);
+      let countRecords = 0;
+
+      for (let data of response.data) {
+        countRecords++;
+        if (countRecords > 1000) {
+          break;
+        }
+        data = modifyInputData(data);
+
+        try {
+          await this.prisma.items.upsert({
+            where: { code: data.code },
+            update: data,
+            create: data,
+          });
+        } catch (error) {
+          await this.logService.create({
+            log: error,
+            type: 'error',
+            entity: 'items',
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   create(data: CreateItemDto) {
     return this.prisma.items.create({
@@ -62,7 +120,7 @@ export class ItemsService {
         })))
       : (result = await this.prisma.barcodes.findUnique({
           where: { barcode: id.toString() },
-          include: { itemId: true },
+          include: { Items: true },
         }));
     return result;
   }

@@ -5,7 +5,7 @@ import { FindOneUnitSetDTO } from './dto/find-one-unit-set.dto';
 import { UnitSetsService } from './unit-sets.service';
 
 @ApiTags('UnitSets')
-@Controller('unit-sets')
+@Controller('unitSets')
 export class UnitSetsController {
   constructor(private readonly unitSetsService: UnitSetsService) {}
 

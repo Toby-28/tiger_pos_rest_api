@@ -5,7 +5,7 @@ import { FindAllDiscountCardsDTO } from './dto/find-all-discound-cards.dto';
 import { FindOneDiscountCardDTO } from './dto/find-one-discount-card.dto';
 
 @ApiTags('DiscountCards')
-@Controller('discount-cards')
+@Controller('discountCards')
 export class DiscountCardsController {
   constructor(private readonly discountCardsService: DiscountCardsService) {}
 
