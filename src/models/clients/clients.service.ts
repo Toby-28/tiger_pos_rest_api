@@ -36,17 +36,15 @@ export class ClientsService {
             username: process.env.username,
             password: process.env.password,
           },
+          params: {
+            limit: 500,
+          },
         },
       );
 
       console.log(response.data.length);
-      let countRecords = 0;
 
       for (let data of response.data) {
-        countRecords++;
-        if (countRecords > 1000) {
-          break;
-        }
         data = modifyInputData(data);
 
         try {

@@ -39,6 +39,8 @@ export class BarcodesService {
   ) {}
 
   async sync() {
+    let exampleErrorLog = undefined;
+
     try {
       const response = await this.httpService.axiosRef.get(
         `${process.env.url}/api/v2/barcodes`,
@@ -47,17 +49,15 @@ export class BarcodesService {
             username: process.env.username,
             password: process.env.password,
           },
+          params: {
+            limit: 500,
+          },
         },
       );
 
       console.log(response.data.length);
-      let countRecords = 0;
 
       for (let data of response.data) {
-        countRecords++;
-        if (countRecords > 1000) {
-          break;
-        }
         data = modifyInputData(data);
 
         try {
@@ -67,6 +67,7 @@ export class BarcodesService {
             create: data,
           });
         } catch (error) {
+          exampleErrorLog = error;
           await this.logService.create({
             log: error,
             type: 'error',
@@ -77,6 +78,8 @@ export class BarcodesService {
     } catch (error) {
       console.log(error);
     }
+
+    console.log(exampleErrorLog);
   }
 
   create(data: CreateBarcodeDto) {
