@@ -64,14 +64,14 @@ export class CasesService {
           });
         } catch (error) {
           await this.logService.create({
-            log: error,
+            log: error.toString(),
             type: 'error',
             entity: 'cases',
           });
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.toString());
     }
   }
 

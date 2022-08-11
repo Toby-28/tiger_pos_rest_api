@@ -7,18 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Article {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
-  description String?
-  body        String
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("article")
-}
-
 model Barcodes {
   id         Int      @id @default(autoincrement())
   itemId     Int      @unique
@@ -263,7 +251,7 @@ model UnitSets {
 
 model Logs {
   id        Int      @id @default(autoincrement())
-  log       Json
+  log       String
   type      String
   entity    String
   createdAt DateTime @default(now())

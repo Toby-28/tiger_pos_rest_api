@@ -68,14 +68,14 @@ export class PricesService {
           });
         } catch (error) {
           await this.logService.create({
-            log: error,
+            log: error.toString(),
             type: 'error',
             entity: 'prices',
           });
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.toString());
     }
   }
 

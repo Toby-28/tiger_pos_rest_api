@@ -39,8 +39,6 @@ export class BarcodesService {
   ) {}
 
   async sync() {
-    let exampleErrorLog = undefined;
-
     try {
       const response = await this.httpService.axiosRef.get(
         `${process.env.url}/api/v2/barcodes`,
@@ -67,19 +65,16 @@ export class BarcodesService {
             create: data,
           });
         } catch (error) {
-          exampleErrorLog = error;
           await this.logService.create({
-            log: error,
+            log: error.toString(),
             type: 'error',
             entity: 'barcodes',
           });
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.toString());
     }
-
-    console.log(exampleErrorLog);
   }
 
   create(data: CreateBarcodeDto) {

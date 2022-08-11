@@ -55,14 +55,14 @@ export class ClientsService {
           });
         } catch (error) {
           await this.logService.create({
-            log: error,
+            log: error.toString(),
             type: 'error',
             entity: 'clients',
           });
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.toString());
     }
   }
 

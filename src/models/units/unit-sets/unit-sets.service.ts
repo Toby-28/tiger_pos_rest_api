@@ -51,14 +51,14 @@ export class UnitSetsService {
           });
         } catch (error) {
           await this.logService.create({
-            log: error,
+            log: error.toString(),
             type: 'error',
             entity: 'unit_sets',
           });
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.toString());
     }
   }
 
