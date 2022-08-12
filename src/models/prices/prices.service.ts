@@ -24,6 +24,9 @@ function modifyInputData(data) {
   let modified = undefined;
 
   Object.keys(data).forEach((key) => {
+    if (key === 'id') {
+      modified = { ...modified, ['id_']: data[key] };
+    }
     if (key !== 'createdAt' && key !== 'updatedAt') {
       modified = { ...modified, [key]: data[key] };
     }
@@ -50,7 +53,7 @@ export class PricesService {
             password: process.env.password,
           },
           params: {
-            limit: 500,
+            limit: 10000,
           },
         },
       );
@@ -62,20 +65,24 @@ export class PricesService {
 
         try {
           await this.prisma.prices.upsert({
-            where: { code: data.code },
+            where: { id_: data.id_ },
             update: data,
             create: data,
           });
         } catch (error) {
           await this.logService.create({
             log: error.toString(),
-            type: 'error',
+            type: 'pos',
             entity: 'prices',
           });
         }
       }
     } catch (error) {
-      console.log(error.toString());
+      await this.logService.create({
+        log: error.toString(),
+        type: 'tiger',
+        entity: 'brands',
+      });
     }
   }
 
@@ -97,10 +104,9 @@ export class PricesService {
     });
   }
 
-  findOne(id: any, query: FindOnePriceDTO) {
-    let where = query.type === 'id' ? { id: +id } : { code: id };
+  findOne(id: number, query: FindOnePriceDTO) {
     let include = checkInclude(query.include);
 
-    return this.prisma.prices.findUnique({ where, include });
+    return this.prisma.prices.findUnique({ where: { id }, include });
   }
 }

@@ -16,6 +16,6 @@ export class PricesController {
 
   @Get(':id')
   findOne(@Param('id') id: string, @Query() query: FindOnePriceDTO) {
-    return this.pricesService.findOne(id, query);
+    return this.pricesService.findOne(+id, query);
   }
 }

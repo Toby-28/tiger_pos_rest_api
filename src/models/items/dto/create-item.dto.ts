@@ -3,6 +3,9 @@ import { CartTypeEnums } from '../enums/CartTypeEnums';
 
 export class CreateItemDto {
   @ApiProperty({})
+  id_: number;
+  
+  @ApiProperty({})
   code: string;
 
   @ApiProperty({ required: false })

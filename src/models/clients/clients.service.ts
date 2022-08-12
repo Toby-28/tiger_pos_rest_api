@@ -1,16 +1,17 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { Clients } from '@prisma/client';
 import { LogsService } from 'src/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FindAllClientsDTO } from './dto/find-all-clients.dto';
-import { FindOneClentDTO } from './dto/find-one-client.dto';
 
 // Custom Functions
 function modifyInputData(data) {
   let modified = undefined;
 
   Object.keys(data).forEach((key) => {
+    if (key === 'id') {
+      modified = { ...modified, ['id_']: data[key] };
+    }
     if (key !== 'createdAt' && key !== 'updatedAt') {
       modified = { ...modified, [key]: data[key] };
     }
@@ -37,7 +38,7 @@ export class ClientsService {
             password: process.env.password,
           },
           params: {
-            limit: 500,
+            limit: 10000,
           },
         },
       );
@@ -49,20 +50,24 @@ export class ClientsService {
 
         try {
           await this.prisma.clients.upsert({
-            where: { code: data.code },
+            where: { id_: data.id_ },
             update: data,
             create: data,
           });
         } catch (error) {
           await this.logService.create({
             log: error.toString(),
-            type: 'error',
+            type: 'pos',
             entity: 'clients',
           });
         }
       }
     } catch (error) {
-      console.log(error.toString());
+      await this.logService.create({
+        log: error.toString(),
+        type: 'tiger',
+        entity: 'brands',
+      });
     }
   }
 
@@ -73,11 +78,9 @@ export class ClientsService {
     return this.prisma.clients.findMany({ skip, take });
   }
 
-  findOne(id: any, query: FindOneClentDTO) {
-    id = query.type === 'id' ? +id : id;
-
+  findOne(id: number) {
     return this.prisma.clients.findUnique({
-      where: query.type === 'id' ? { id: id } : { code: id },
+      where: { id },
     });
   }
 }

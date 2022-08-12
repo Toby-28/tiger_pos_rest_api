@@ -3,13 +3,15 @@ import { Injectable } from '@nestjs/common';
 import { LogsService } from 'src/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FindAllUnitSetsDTO } from './dto/find-all-unit-sets.dto';
-import { FindOneUnitSetDTO } from './dto/find-one-unit-set.dto';
 
 // Custom Functions
 function modifyInputData(data) {
   let modified = undefined;
 
   Object.keys(data).forEach((key) => {
+    if (key === 'id') {
+      modified = { ...modified, ['id_']: data[key] };
+    }
     if (key !== 'createdAt' && key !== 'updatedAt') {
       modified = { ...modified, [key]: data[key] };
     }
@@ -45,20 +47,24 @@ export class UnitSetsService {
 
         try {
           await this.prisma.unitSets.upsert({
-            where: { code: data.code },
+            where: { id_: data.id_ },
             update: data,
             create: data,
           });
         } catch (error) {
           await this.logService.create({
             log: error.toString(),
-            type: 'error',
+            type: 'pos',
             entity: 'unit_sets',
           });
         }
       }
     } catch (error) {
-      console.log(error.toString());
+      await this.logService.create({
+        log: error.toString(),
+        type: 'tiger',
+        entity: 'unit_sets',
+      });
     }
   }
 
@@ -69,9 +75,7 @@ export class UnitSetsService {
     return this.prisma.unitSets.findMany({ skip, take });
   }
 
-  findOne(id: any, query: FindOneUnitSetDTO) {
-    let where = query.type === 'id' ? { id: +id } : { code: id };
-
-    return this.prisma.unitSets.findUnique({ where });
+  findOne(id: number) {
+    return this.prisma.unitSets.findUnique({ where: { id } });
   }
 }

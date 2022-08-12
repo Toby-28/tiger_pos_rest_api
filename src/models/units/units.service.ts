@@ -21,6 +21,9 @@ function modifyInputData(data) {
   let modified = undefined;
 
   Object.keys(data).forEach((key) => {
+    if (key === 'id') {
+      modified = { ...modified, ['id_']: data[key] };
+    }
     if (key !== 'createdAt' && key !== 'updatedAt') {
       modified = { ...modified, [key]: data[key] };
     }
@@ -32,7 +35,7 @@ function modifyInputData(data) {
 @Injectable()
 export class UnitsService {
   constructor(
-    private prisma: PrismaService,
+    private readonly prisma: PrismaService,
     private readonly httpService: HttpService,
     private readonly logService: LogsService,
   ) {}
@@ -56,20 +59,24 @@ export class UnitsService {
 
         try {
           await this.prisma.units.upsert({
-            where: { code: data.code },
+            where: { id_: data.id_ },
             update: data,
             create: data,
           });
         } catch (error) {
           await this.logService.create({
             log: error.toString(),
-            type: 'error',
+            type: 'pos',
             entity: 'units',
           });
         }
       }
     } catch (error) {
-      console.log(error.toString());
+      await this.logService.create({
+        log: error.toString(),
+        type: 'tiger',
+        entity: 'brands',
+      });
     }
   }
 
@@ -81,10 +88,9 @@ export class UnitsService {
     return this.prisma.units.findMany({ skip, take, include });
   }
 
-  findOne(id: any, query: FindOneUnitDTO) {
-    let where = query.type === 'id' ? { id: +id } : { code: id };
+  findOne(id: number, query: FindOneUnitDTO) {
     let include = checkInclude(query.include);
 
-    return this.prisma.units.findUnique({ where, include });
+    return this.prisma.units.findUnique({ where: { id }, include });
   }
 }

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class FindOneCaseDTO {
-  @ApiProperty({ enum: ['id', 'code', 'divisionNr', 'currencyId'] })
+  @ApiProperty({ enum: ['id', 'divisionNr'] })
   type: string;
 
   @ApiProperty({

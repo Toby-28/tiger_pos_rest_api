@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { LogsService } from 'src/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FindAllDiscountCardsDTO } from './dto/find-all-discound-cards.dto';
-import { FindOneDiscountCardDTO } from './dto/find-one-discount-card.dto';
 
 const findAllDiscountCardsType = [
   'buyDiscount',
@@ -17,6 +16,9 @@ function modifyInputData(data) {
   let modified = undefined;
 
   Object.keys(data).forEach((key) => {
+    if (key === 'id') {
+      modified = { ...modified, ['id_']: data[key] };
+    }
     if (key !== 'createdAt' && key !== 'updatedAt') {
       modified = { ...modified, [key]: data[key] };
     }
@@ -52,20 +54,24 @@ export class DiscountCardsService {
 
         try {
           await this.prisma.discountCards.upsert({
-            where: { code: data.code },
+            where: { id_: data.id_ },
             update: data,
             create: data,
           });
         } catch (error) {
           await this.logService.create({
             log: error.toString(),
-            type: 'error',
+            type: 'pos',
             entity: 'discount_cards',
           });
         }
       }
     } catch (error) {
-      console.log(error.toString());
+      await this.logService.create({
+        log: error.toString(),
+        type: 'tiger',
+        entity: 'brands',
+      });
     }
   }
 
@@ -80,11 +86,7 @@ export class DiscountCardsService {
     return this.prisma.discountCards.findMany({ skip, take, where });
   }
 
-  findOne(id: any, query: FindOneDiscountCardDTO) {
-    id = query.type === 'id' ? +id : id;
-
-    return this.prisma.discountCards.findUnique({
-      where: query.type === 'id' ? { id: id } : { code: id },
-    });
+  findOne(id: number) {
+    return this.prisma.discountCards.findUnique({ where: { id } });
   }
 }

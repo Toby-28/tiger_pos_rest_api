@@ -23,6 +23,9 @@ function modifyInputData(data) {
   let modified = undefined;
 
   Object.keys(data).forEach((key) => {
+    if (key === 'id') {
+      modified = { ...modified, ['id_']: data[key] };
+    }
     if (key !== 'createdAt' && key !== 'updatedAt') {
       modified = { ...modified, [key]: data[key] };
     }
@@ -58,25 +61,29 @@ export class CasesService {
 
         try {
           await this.prisma.cases.upsert({
-            where: { code: data.code },
+            where: { id_: data.id_ },
             update: data,
             create: data,
           });
         } catch (error) {
           await this.logService.create({
             log: error.toString(),
-            type: 'error',
+            type: 'pos',
             entity: 'cases',
           });
         }
       }
     } catch (error) {
-      console.log(error.toString());
+      await this.logService.create({
+        log: error.toString(),
+        type: 'tiger',
+        entity: 'brands',
+      });
     }
   }
 
-  create(body: CreateCaseDto) {
-    return this.prisma.cases.create({ data: body });
+  create(data: CreateCaseDto) {
+    return this.prisma.cases.create({ data });
   }
 
   findAll(query: FindAllCasesDTO) {
@@ -84,14 +91,12 @@ export class CasesService {
     let take = query.take ? +query.take : 10;
     let include = checkIncludes(query.include);
 
-    return this.prisma.cases.findMany({ skip, take });
+    return this.prisma.cases.findMany({ skip, take, include });
   }
 
-  findOne(id: any, query: FindOneCaseDTO) {
-    id = query.type !== 'code' ? +id : id;
-    let where = query.type === 'id' ? { id: id } : { code: id };
+  findOne(id: number, query: FindOneCaseDTO) {
     let include = checkIncludes(query.include);
 
-    return this.prisma.cases.findMany({ where });
+    return this.prisma.cases.findMany({ where: { id }, include });
   }
 }

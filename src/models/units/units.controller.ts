@@ -16,6 +16,6 @@ export class UnitsController {
 
   @Get(':id')
   findOne(@Param('id') id: string, @Query() query: FindOneUnitDTO) {
-    return this.unitsService.findOne(id, query);
+    return this.unitsService.findOne(+id, query);
   }
 }

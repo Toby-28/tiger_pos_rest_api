@@ -22,6 +22,6 @@ export class ItemsController {
 
   @Get(':id')
   findOne(@Param('id') id: string, @Query() query: FindOneQueryDTO) {
-    return this.itemsService.findOne(id, query);
+    return this.itemsService.findOne(+id, query);
   }
 }

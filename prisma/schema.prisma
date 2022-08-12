@@ -9,6 +9,7 @@ datasource db {
 
 model Barcodes {
   id         Int      @id @default(autoincrement())
+  id_        Int      @unique
   itemId     Int      @unique
   itemUnitId Int      @unique
   unitId     Int
@@ -25,8 +26,9 @@ model Barcodes {
 
 model Items {
   id                 Int      @id @default(autoincrement())
+  id_                Int      @unique
   status             String?  @default("passive")
-  code               String   @unique
+  code               String
   eCode              String?
   active             Boolean?
   eActive            Boolean?
@@ -67,7 +69,8 @@ model Items {
 
 model Brands {
   id        Int      @id @default(autoincrement())
-  code      String   @unique
+  id_       Int      @unique
+  code      String
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -79,13 +82,14 @@ model Brands {
 
 model Cases {
   id         Int      @id @default(autoincrement())
-  code       String   @unique
+  id_        Int      @unique
+  code       String
   name       String
   address    String?
   address2   String?
   divisionNr Int      @unique
   currencyId Int
-  active     Boolean  @default(true)
+  active     Boolean
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -97,6 +101,7 @@ model Cases {
 
 model Divisions {
   id        Int      @id @default(autoincrement())
+  id_       Int      @unique
   nr        Int      @unique
   name      String
   street    String?
@@ -116,7 +121,8 @@ model Divisions {
 
 model Currencies {
   id           Int       @id @default(autoincrement())
-  code         String    @unique
+  id_          Int       @unique
+  code         String
   name         String
   symbol       String?
   activelyUsed Boolean   @default(false)
@@ -136,7 +142,8 @@ model Currencies {
 
 model Clients {
   id               Int      @id @default(autoincrement())
-  code             String   @unique
+  id_              Int      @unique
+  code             String
   name             String
   name2            String?
   active           Boolean  @default(true)
@@ -179,7 +186,8 @@ model Clients {
 
 model DiscountCards {
   id        Int      @id @default(autoincrement())
-  code      String   @unique
+  id_       Int      @unique
+  code      String
   name      String
   cyphcode  String?
   specode   String?
@@ -192,7 +200,8 @@ model DiscountCards {
 
 model Prices {
   id         Int      @id @default(autoincrement())
-  code       String   @unique
+  id_        Int      @unique
+  code       String
   itemId     Int
   priority   Int?
   clentcode  String?
@@ -222,7 +231,8 @@ model Prices {
 
 model Units {
   id        Int      @id @default(autoincrement())
-  code      String   @unique
+  id_       Int      @unique
+  code      String
   name      String
   unitSetId Int
   createdAt DateTime @default(now())
@@ -238,7 +248,8 @@ model Units {
 
 model UnitSets {
   id        Int      @id @default(autoincrement())
-  code      String   @unique
+  id_       Int      @unique
+  code      String
   name      String
   specode   String?
   createdAt DateTime @default(now())

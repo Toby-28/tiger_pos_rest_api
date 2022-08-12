@@ -1,16 +1,17 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { Currencies } from '@prisma/client';
 import { LogsService } from 'src/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FindAllCurrenciesDTO } from './dto/find-all-currencies.dto';
-import { FindOneCurrencyDTO } from './dto/find-one-currency.dto';
 
 // Custom Functions
 function modifyInputData(data) {
   let modified = undefined;
 
   Object.keys(data).forEach((key) => {
+    if (key === 'id') {
+      modified = { ...modified, ['id_']: data[key] };
+    }
     if (key !== 'createdAt' && key !== 'updatedAt') {
       modified = { ...modified, [key]: data[key] };
     }
@@ -46,20 +47,24 @@ export class CurrenciesService {
 
         try {
           await this.prisma.currencies.upsert({
-            where: { code: data.code },
+            where: { id_: data.id_ },
             update: data,
             create: data,
           });
         } catch (error) {
           await this.logService.create({
             log: error.toString(),
-            type: 'error',
+            type: 'pos',
             entity: 'currencies',
           });
         }
       }
     } catch (error) {
-      console.log(error.toString());
+      await this.logService.create({
+        log: error.toString(),
+        type: 'tiger',
+        entity: 'brands',
+      });
     }
   }
 
@@ -70,9 +75,7 @@ export class CurrenciesService {
     return this.prisma.currencies.findMany({ skip, take });
   }
 
-  findOne(id: any, query: FindOneCurrencyDTO) {
-    let where = query.type === 'id' ? { id: +id } : { code: id };
-
-    return this.prisma.currencies.findUnique({ where });
+  findOne(id: number) {
+    return this.prisma.currencies.findUnique({ where: { id } });
   }
 }

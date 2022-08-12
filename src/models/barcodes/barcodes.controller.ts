@@ -23,6 +23,6 @@ export class BarcodesController {
   // @ApiQuery({ type: FindOneBarcodeDTO })
   @Get(':id')
   findOne(@Param('id') id: string, @Query() query: FindOneBarcodeDTO) {
-    return this.barcodesService.findOne(+id, query);
+    return this.barcodesService.findOne(id, query);
   }
 }

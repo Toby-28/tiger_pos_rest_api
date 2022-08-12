@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateCaseDto {
   @ApiProperty({})
+  id_: number;
+  
+  @ApiProperty({})
   code: string;
 
   @ApiProperty({})

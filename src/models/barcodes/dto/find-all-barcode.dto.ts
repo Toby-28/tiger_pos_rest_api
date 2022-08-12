@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BarcodeRelationEnum } from '../enums/BarcodeRealtionEnums';
 
 export class FindAllBarcodeDTO {
   @ApiProperty({ required: false })
@@ -10,7 +9,7 @@ export class FindAllBarcodeDTO {
 
   @ApiProperty({
     required: false,
-    enum: BarcodeRelationEnum,
+    enum: ['Items','Units'],
     isArray: true,
   })
   include: string[];

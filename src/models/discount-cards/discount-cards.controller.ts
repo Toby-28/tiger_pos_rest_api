@@ -2,7 +2,6 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DiscountCardsService } from './discount-cards.service';
 import { FindAllDiscountCardsDTO } from './dto/find-all-discound-cards.dto';
-import { FindOneDiscountCardDTO } from './dto/find-one-discount-card.dto';
 
 @ApiTags('DiscountCards')
 @Controller('discountCards')
@@ -15,7 +14,7 @@ export class DiscountCardsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Query() query: FindOneDiscountCardDTO) {
-    return this.discountCardsService.findOne(id, query);
+  findOne(@Param('id') id: string) {
+    return this.discountCardsService.findOne(+id);
   }
 }

@@ -22,6 +22,6 @@ export class CasesController {
 
   @Get(':id')
   findOne(@Param('id') id: string, @Query() query: FindOneCaseDTO) {
-    return this.casesService.findOne(id, query);
+    return this.casesService.findOne(+id, query);
   }
 }

@@ -7,7 +7,8 @@ import { HttpService } from '@nestjs/axios';
 import { LogsService } from 'src/logs/logs.service';
 
 // Custom Functions
-function checkIncludes(queryInclude, include) {
+function checkIncludes(queryInclude) {
+  let include;
   Array.isArray(queryInclude)
     ? queryInclude.forEach((key) => {
         include = { ...include, [key]: true };
@@ -22,6 +23,9 @@ function modifyInputData(data) {
   let modified = undefined;
 
   Object.keys(data).forEach((key) => {
+    if (key === 'id') {
+      modified = { ...modified, ['id_']: data[key] };
+    }
     if (key !== 'createdAt' && key !== 'updatedAt') {
       modified = { ...modified, [key]: data[key] };
     }
@@ -48,7 +52,7 @@ export class BarcodesService {
             password: process.env.password,
           },
           params: {
-            limit: 500,
+            limit: 10000,
           },
         },
       );
@@ -60,20 +64,24 @@ export class BarcodesService {
 
         try {
           await this.prisma.barcodes.upsert({
-            where: { barcode: data.barcode },
+            where: { id_: data.id_ },
             update: data,
             create: data,
           });
         } catch (error) {
           await this.logService.create({
             log: error.toString(),
-            type: 'error',
+            type: 'pos',
             entity: 'barcodes',
           });
         }
       }
     } catch (error) {
-      console.log(error.toString());
+      await this.logService.create({
+        log: error.toString(),
+        type: 'tiger',
+        entity: 'brands',
+      });
     }
   }
 
@@ -86,9 +94,8 @@ export class BarcodesService {
   findAll(query: FindAllBarcodeDTO) {
     let take = query.take ? +query.take : 10;
     let skip = query.skip ? +query.skip : 0;
-    let include;
 
-    include = checkIncludes(query.include, include);
+    let include = checkIncludes(query.include);
 
     return this.prisma.barcodes.findMany({
       skip,
@@ -97,12 +104,14 @@ export class BarcodesService {
     });
   }
 
-  findOne(id: number, query: FindOneBarcodeDTO) {
-    let where = query.type === 'id' ? { id: id } : { barcode: id.toString() };
-    let include;
+  findOne(id: any, query: FindOneBarcodeDTO) {
+    id = query.type === 'id' ? +id : id;
 
-    include = checkIncludes(query.include, include);
+    let include = checkIncludes(query.include);
 
-    return this.prisma.barcodes.findUnique({ where: where, include });
+    return this.prisma.barcodes.findUnique({
+      where: { [query.type]: id },
+      include,
+    });
   }
 }

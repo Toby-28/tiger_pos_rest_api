@@ -12,11 +12,13 @@ import { ItemsService } from './models/items/items.service';
 import { PricesService } from './models/prices/prices.service';
 import { UnitSetsService } from './models/units/unit-sets/unit-sets.service';
 import { UnitsService } from './models/units/units.service';
+import { PrismaService } from './prisma/prisma.service';
 
-@ApiTags('Sync')
+@ApiTags('sync')
 @Controller()
 export class AppController {
   constructor(
+    private readonly prisma: PrismaService,
     private readonly appService: AppService,
     private readonly brands: BrandsService,
     private readonly divisions: DivisionsService,
@@ -41,14 +43,14 @@ export class AppController {
     console.log(`Brands >------------------------------------`);
     await this.brands.sync();
 
-    console.log(`Items >-------------------------------------`);
-    await this.items.sync();
-
     console.log(`UnitSets >----------------------------------`);
     await this.unitSets.sync();
 
     console.log(`Units >-------------------------------------`);
     await this.units.sync();
+
+    console.log(`Items >-------------------------------------`);
+    await this.items.sync();
 
     console.log(`Barcodes >----------------------------------`);
     await this.barcodes.sync();

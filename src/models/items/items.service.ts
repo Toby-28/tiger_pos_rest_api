@@ -22,6 +22,9 @@ function modifyInputData(data) {
   let modified = undefined;
 
   Object.keys(data).forEach((key) => {
+    if (key === 'id') {
+      modified = { ...modified, ['id_']: data[key] };
+    }
     if (key !== 'createdAt' && key !== 'updatedAt') {
       modified = { ...modified, [key]: data[key] };
     }
@@ -48,7 +51,7 @@ export class ItemsService {
             password: process.env.password,
           },
           params: {
-            limit: 500,
+            limit: 10000,
           },
         },
       );
@@ -60,20 +63,24 @@ export class ItemsService {
 
         try {
           await this.prisma.items.upsert({
-            where: { code: data.code },
+            where: { id_: data.id_ },
             update: data,
             create: data,
           });
         } catch (error) {
           await this.logService.create({
             log: error.toString(),
-            type: 'error',
+            type: 'pos',
             entity: 'items',
           });
         }
       }
     } catch (error) {
-      console.log(error.toString());
+      await this.logService.create({
+        log: error.toString(),
+        type: 'tiger',
+        entity: 'brands',
+      });
     }
   }
 
@@ -103,19 +110,15 @@ export class ItemsService {
     });
   }
 
-  async findOne(id: any, query: FindOneQueryDTO) {
-    id = query.type !== 'code' ? +id : id;
-
+  async findOne(id: number, query: FindOneQueryDTO) {
     let include = checkInclude(query.include);
-    let where = {};
     let result = {};
 
     query.type !== 'barcode'
-      ? ((where = query.type === 'id' ? { id: id } : { code: id.toString() }),
-        (result = await this.prisma.items.findUnique({
-          where: where,
+      ? (result = await this.prisma.items.findUnique({
+          where: { id },
           include,
-        })))
+        }))
       : (result = await this.prisma.barcodes.findUnique({
           where: { barcode: id.toString() },
           include: { Items: true },

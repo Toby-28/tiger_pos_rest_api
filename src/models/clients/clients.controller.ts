@@ -2,7 +2,6 @@ import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ClientsService } from './clients.service';
 import { FindAllClientsDTO } from './dto/find-all-clients.dto';
-import { FindOneClentDTO } from './dto/find-one-client.dto';
 
 @ApiTags('Clients')
 @Controller('clients')
@@ -15,7 +14,7 @@ export class ClientsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Query() query: FindOneClentDTO) {
-    return this.clientsService.findOne(id, query);
+  findOne(@Param('id') id: string) {
+    return this.clientsService.findOne(+id);
   }
 }

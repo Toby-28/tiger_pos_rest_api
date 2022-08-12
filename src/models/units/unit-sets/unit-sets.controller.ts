@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { FindAllUnitSetsDTO } from './dto/find-all-unit-sets.dto';
-import { FindOneUnitSetDTO } from './dto/find-one-unit-set.dto';
 import { UnitSetsService } from './unit-sets.service';
 
 @ApiTags('UnitSets')
@@ -15,7 +14,7 @@ export class UnitSetsController {
   }
 
   @Get(':id')
-  findOne(@Param() id: string, @Query() query: FindOneUnitSetDTO) {
-    return this.unitSetsService.findOne(id, query);
+  findOne(@Param() id: string) {
+    return this.unitSetsService.findOne(+id);
   }
 }
