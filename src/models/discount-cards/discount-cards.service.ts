@@ -23,6 +23,7 @@ function modifyInputData(data) {
       modified = { ...modified, [key]: data[key] };
     }
   });
+  delete modified.id;
 
   return modified;
 }
@@ -63,6 +64,7 @@ export class DiscountCardsService {
             log: error.toString(),
             type: 'pos',
             entity: 'discount_cards',
+            row_id: data.id_,
           });
         }
       }

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FindAllBarcodeDTO } from './dto/find-all-barcode.dto';
 import { FindOneBarcodeDTO } from './dto/find-one-barcode.dto';
-import { CreateBarcodeDto } from './dto/create-barcode.dto';
 import { HttpService } from '@nestjs/axios';
 import { LogsService } from 'src/logs/logs.service';
 
@@ -30,6 +29,7 @@ function modifyInputData(data) {
       modified = { ...modified, [key]: data[key] };
     }
   });
+  delete modified.id;
 
   return modified;
 }
@@ -42,7 +42,8 @@ export class BarcodesService {
     private readonly logService: LogsService,
   ) {}
 
-  async sync() {
+  async sync(offset: number, limit: number): Promise<number> {
+    let length: number;
     try {
       const response = await this.httpService.axiosRef.get(
         `${process.env.url}/api/v2/barcodes`,
@@ -51,13 +52,11 @@ export class BarcodesService {
             username: process.env.username,
             password: process.env.password,
           },
-          params: {
-            limit: 10000,
-          },
+          params: { offset, limit },
         },
       );
-
-      console.log(response.data.length);
+      length = response.data.length;
+      console.log(length);
 
       for (let data of response.data) {
         data = modifyInputData(data);
@@ -73,6 +72,7 @@ export class BarcodesService {
             log: error.toString(),
             type: 'pos',
             entity: 'barcodes',
+            row_id: data.id_,
           });
         }
       }
@@ -83,12 +83,8 @@ export class BarcodesService {
         entity: 'brands',
       });
     }
-  }
 
-  create(data: CreateBarcodeDto) {
-    return this.prisma.barcodes.create({
-      data,
-    });
+    return length;
   }
 
   findAll(query: FindAllBarcodeDTO) {

@@ -30,6 +30,7 @@ function modifyInputData(data) {
       modified = { ...modified, [key]: data[key] };
     }
   });
+  delete modified.id;
 
   return modified;
 }
@@ -41,7 +42,7 @@ export class CasesService {
     private readonly httpService: HttpService,
     private readonly logService: LogsService,
   ) {}
-
+ 
   async sync() {
     try {
       const response = await this.httpService.axiosRef.get(
@@ -70,6 +71,7 @@ export class CasesService {
             log: error.toString(),
             type: 'pos',
             entity: 'cases',
+            row_id: data.id_,
           });
         }
       }
@@ -83,7 +85,7 @@ export class CasesService {
   }
 
   create(data: CreateCaseDto) {
-    return this.prisma.cases.create({ data });
+    return;
   }
 
   findAll(query: FindAllCasesDTO) {

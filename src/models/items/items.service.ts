@@ -29,6 +29,7 @@ function modifyInputData(data) {
       modified = { ...modified, [key]: data[key] };
     }
   });
+  delete modified.id;
 
   return modified;
 }
@@ -36,12 +37,13 @@ function modifyInputData(data) {
 @Injectable()
 export class ItemsService {
   constructor(
-    private prisma: PrismaService,
+    private readonly prisma: PrismaService,
     private readonly httpService: HttpService,
     private readonly logService: LogsService,
   ) {}
 
-  async sync() {
+  async sync(offset: number, limit: number): Promise<number> {
+    let length: number;
     try {
       const response = await this.httpService.axiosRef.get(
         `${process.env.url}/api/v2/items`,
@@ -50,13 +52,11 @@ export class ItemsService {
             username: process.env.username,
             password: process.env.password,
           },
-          params: {
-            limit: 10000,
-          },
+          params: { offset, limit },
         },
       );
-
-      console.log(response.data.length);
+      length = response.data.length;
+      console.log(length);
 
       for (let data of response.data) {
         data = modifyInputData(data);
@@ -72,6 +72,7 @@ export class ItemsService {
             log: error.toString(),
             type: 'pos',
             entity: 'items',
+            row_id: data.id_,
           });
         }
       }
@@ -82,12 +83,12 @@ export class ItemsService {
         entity: 'brands',
       });
     }
+
+    return length;
   }
 
   create(data: CreateItemDto) {
-    return this.prisma.items.create({
-      data,
-    });
+    return;
   }
 
   findAll(query: FindAllItemsDTO) {

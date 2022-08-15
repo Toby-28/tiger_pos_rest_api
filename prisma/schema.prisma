@@ -27,7 +27,7 @@ model Barcodes {
 model Items {
   id                 Int      @id @default(autoincrement())
   id_                Int      @unique
-  status             String?  @default("passive")
+  status             String?
   code               String
   eCode              String?
   active             Boolean?
@@ -49,9 +49,9 @@ model Items {
   keyword5           String?
   origin             String?
   category           String?
-  mainUnit           String
-  mainUnitId         Int
-  brandId            Int
+  mainUnit           String?
+  mainUnitId         Int?
+  brandId            Int?
   variationCode      String?
   reyonCode          String?
   producerCode       String?
@@ -60,7 +60,7 @@ model Items {
   updatedAt          DateTime @updatedAt
 
   Brands   Brands?   @relation(fields: [brandId], references: [id])
-  Units    Units     @relation(fields: [mainUnitId], references: [id])
+  Units    Units?    @relation(fields: [mainUnitId], references: [id])
   Barcodes Barcodes?
   Prices   Prices[]
 
@@ -87,13 +87,12 @@ model Cases {
   name       String
   address    String?
   address2   String?
-  divisionNr Int      @unique
+  divisionNr Int?
   currencyId Int
   active     Boolean
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  Division Divisions  @relation(fields: [divisionNr], references: [nr])
   Currency Currencies @relation(fields: [currencyId], references: [id])
 
   @@map("cases")
@@ -114,8 +113,6 @@ model Divisions {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Cases Cases?
-
   @@map("divisions")
 }
 
@@ -125,7 +122,7 @@ model Currencies {
   code         String
   name         String
   symbol       String?
-  activelyUsed Boolean   @default(false)
+  activelyUsed Boolean?
   lastRate1    Float?
   lastRate2    Float?
   lastRate3    Float?
@@ -146,7 +143,7 @@ model Clients {
   code             String
   name             String
   name2            String?
-  active           Boolean  @default(true)
+  active           Boolean?
   cardType         Int?
   eCode            String?
   address          String?
@@ -262,6 +259,7 @@ model UnitSets {
 
 model Logs {
   id        Int      @id @default(autoincrement())
+  row_id    Int?
   log       String
   type      String
   entity    String

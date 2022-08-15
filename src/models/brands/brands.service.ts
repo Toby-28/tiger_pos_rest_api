@@ -16,6 +16,7 @@ function modifyInputData(data) {
       modified = { ...modified, [key]: data[key] };
     }
   });
+  delete modified.id;
 
   return modified;
 }
@@ -56,6 +57,7 @@ export class BrandsService {
             log: error.toString(),
             type: 'pos',
             entity: 'brands',
+            row_id: data.id_,
           });
         }
       }

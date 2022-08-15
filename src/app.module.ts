@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaModule } from './prisma/prisma.module';
 import { BarcodesModule } from './models/barcodes/barcodes.module';
 import { ItemsModule } from './models/items/items.module';
 import { BrandsModule } from './models/brands/brands.module';
@@ -13,11 +12,9 @@ import { DiscountCardsModule } from './models/discount-cards/discount-cards.modu
 import { PricesModule } from './models/prices/prices.module';
 import { UnitsModule } from './models/units/units.module';
 import { UnitSetsModule } from './models/units/unit-sets/unit-sets.module';
-import { LogsModule } from './logs/logs.module';
 
 @Module({
   imports: [
-    PrismaModule,
     BarcodesModule,
     ItemsModule,
     BrandsModule,
@@ -29,7 +26,6 @@ import { LogsModule } from './logs/logs.module';
     PricesModule,
     UnitsModule,
     UnitSetsModule,
-    LogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

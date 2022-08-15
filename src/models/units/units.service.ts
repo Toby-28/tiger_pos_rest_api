@@ -28,6 +28,7 @@ function modifyInputData(data) {
       modified = { ...modified, [key]: data[key] };
     }
   });
+  delete modified.id;
 
   return modified;
 }
@@ -68,6 +69,7 @@ export class UnitsService {
             log: error.toString(),
             type: 'pos',
             entity: 'units',
+            row_id: data.id_,
           });
         }
       }

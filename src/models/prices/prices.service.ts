@@ -31,6 +31,7 @@ function modifyInputData(data) {
       modified = { ...modified, [key]: data[key] };
     }
   });
+  delete modified.id;
 
   return modified;
 }
@@ -43,7 +44,8 @@ export class PricesService {
     private readonly logService: LogsService,
   ) {}
 
-  async sync() {
+  async sync(offset: number, limit: number): Promise<number> {
+    let length: number;
     try {
       const response = await this.httpService.axiosRef.get(
         `${process.env.url}/api/v2/prices`,
@@ -52,13 +54,11 @@ export class PricesService {
             username: process.env.username,
             password: process.env.password,
           },
-          params: {
-            limit: 10000,
-          },
+          params: { offset, limit },
         },
       );
-
-      console.log(response.data.length);
+      length = response.data.length;
+      console.log(length);
 
       for (let data of response.data) {
         data = modifyInputData(data);
@@ -74,6 +74,7 @@ export class PricesService {
             log: error.toString(),
             type: 'pos',
             entity: 'prices',
+            row_id: data.id_,
           });
         }
       }
@@ -84,6 +85,8 @@ export class PricesService {
         entity: 'brands',
       });
     }
+
+    return length;
   }
 
   findAll(query: FindAllPricesDTO) {

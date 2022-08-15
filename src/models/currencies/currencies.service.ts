@@ -16,6 +16,7 @@ function modifyInputData(data) {
       modified = { ...modified, [key]: data[key] };
     }
   });
+  delete modified.id;
 
   return modified;
 }
@@ -56,6 +57,7 @@ export class CurrenciesService {
             log: error.toString(),
             type: 'pos',
             entity: 'currencies',
+            row_id: data.id_,
           });
         }
       }

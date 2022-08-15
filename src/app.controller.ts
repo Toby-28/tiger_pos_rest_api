@@ -12,13 +12,11 @@ import { ItemsService } from './models/items/items.service';
 import { PricesService } from './models/prices/prices.service';
 import { UnitSetsService } from './models/units/unit-sets/unit-sets.service';
 import { UnitsService } from './models/units/units.service';
-import { PrismaService } from './prisma/prisma.service';
 
 @ApiTags('sync')
 @Controller()
 export class AppController {
   constructor(
-    private readonly prisma: PrismaService,
     private readonly appService: AppService,
     private readonly brands: BrandsService,
     private readonly divisions: DivisionsService,
@@ -40,6 +38,10 @@ export class AppController {
 
   @Get('sync')
   async sync() {
+    let length: number;
+    let offsetPagination: number;
+    let limitPagination: number;
+
     console.log(`Brands >------------------------------------`);
     await this.brands.sync();
 
@@ -50,10 +52,26 @@ export class AppController {
     await this.units.sync();
 
     console.log(`Items >-------------------------------------`);
-    await this.items.sync();
+    length = 0;
+    offsetPagination = 98000;
+    limitPagination = 10000;
+
+    do {
+      length = await this.items.sync(offsetPagination, limitPagination);
+
+      offsetPagination += limitPagination;
+    } while (length === limitPagination);
 
     console.log(`Barcodes >----------------------------------`);
-    await this.barcodes.sync();
+    length = 0;
+    offsetPagination = 98000;
+    limitPagination = 10000;
+
+    do {
+      length = await this.barcodes.sync(offsetPagination, limitPagination);
+
+      offsetPagination += limitPagination;
+    } while (length === limitPagination);
 
     console.log(`Divisions >---------------------------------`);
     await this.divisions.sync();
@@ -62,13 +80,29 @@ export class AppController {
     await this.currencies.sync();
 
     console.log(`Prices >------------------------------------`);
-    await this.prices.sync();
+    length = 0;
+    offsetPagination = 211000;
+    limitPagination = 10000;
+
+    do {
+      length = await this.prices.sync(offsetPagination, limitPagination);
+
+      offsetPagination += limitPagination;
+    } while (length === limitPagination);
 
     console.log(`Cases >-------------------------------------`);
     await this.cases.sync();
 
     console.log(`Clients >-----------------------------------`);
-    await this.clients.sync();
+    length = 0;
+    offsetPagination = 4000;
+    limitPagination = 10000;
+
+    do {
+      length = await this.clients.sync(offsetPagination, limitPagination);
+
+      offsetPagination += limitPagination;
+    } while (length === limitPagination);
 
     console.log(`DiscountCards >-----------------------------`);
     await this.discountCards.sync();
