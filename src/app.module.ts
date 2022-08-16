@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BarcodesModule } from './models/barcodes/barcodes.module';
@@ -12,6 +13,8 @@ import { DiscountCardsModule } from './models/discount-cards/discount-cards.modu
 import { PricesModule } from './models/prices/prices.module';
 import { UnitsModule } from './models/units/units.module';
 import { UnitSetsModule } from './models/units/unit-sets/unit-sets.module';
+import { TaskService } from './schedule/schedule.service';
+import { SalesModule } from './models/sales/sales.module';
 
 @Module({
   imports: [
@@ -26,8 +29,10 @@ import { UnitSetsModule } from './models/units/unit-sets/unit-sets.module';
     PricesModule,
     UnitsModule,
     UnitSetsModule,
+    SalesModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TaskService],
 })
 export class AppModule {}

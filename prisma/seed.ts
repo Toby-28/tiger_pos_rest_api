@@ -6,7 +6,7 @@ const brands: Prisma.BrandsCreateManyInput[] = [
 ];
 
 async function main() {
-  await prisma.brands.createMany({ data: brands });
+  // await prisma.brands.createMany({ data: brands });
 }
 
 main()
