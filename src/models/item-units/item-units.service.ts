@@ -2,9 +2,8 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { LogsService } from 'src/logs/logs.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateItemDto } from './dto/create-item.dto';
-import { FindAllItemsDTO } from './dto/find-all-items.dto';
-import { FindOneQueryDTO } from './dto/find-one-query.dto';
+import { FindAllItemUnitsDTO } from './dto/find-all-item-units.dto';
+import { FindOneItemUnitDTO } from './dto/find-one-item-unit.dto';
 
 // Custom Functions
 function checkInclude(queryInclude) {
@@ -35,7 +34,7 @@ function modifyInputData(data) {
 }
 
 @Injectable()
-export class ItemsService {
+export class ItemUnitsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly httpService: HttpService,
@@ -46,7 +45,7 @@ export class ItemsService {
     let length: number;
     try {
       const response = await this.httpService.axiosRef.get(
-        `${process.env.url}/api/v2/items`,
+        `${process.env.url}/api/v2/itemUnits`,
         {
           auth: {
             username: process.env.username,
@@ -62,7 +61,7 @@ export class ItemsService {
         data = modifyInputData(data);
 
         try {
-          await this.prisma.items.upsert({
+          await this.prisma.itemUnits.upsert({
             where: { id_: data.id_ },
             update: data,
             create: data,
@@ -71,7 +70,7 @@ export class ItemsService {
           await this.logService.create({
             log: error.toString(),
             type: 'pos',
-            entity: 'items',
+            entity: 'itemUnits',
             row_id: data.id_,
           });
         }
@@ -87,11 +86,7 @@ export class ItemsService {
     return length;
   }
 
-  create(data: CreateItemDto) {
-    return;
-  }
-
-  findAll(query: FindAllItemsDTO) {
+  findAll(query: FindAllItemUnitsDTO) {
     let skip = query.skip ? +query.skip : 0;
     let take = query.take ? +query.take : 10;
     let orderBy = query.orderBy
@@ -101,22 +96,15 @@ export class ItemsService {
       : [];
     let include = checkInclude(query.include);
 
-    return this.prisma.items.findMany({ take, skip, orderBy, include });
+    return this.prisma.itemUnits.findMany({ take, skip, orderBy, include });
   }
 
-  async findOne(id: number, query: FindOneQueryDTO) {
+  findOne(id: number, query: FindOneItemUnitDTO) {
     let include = checkInclude(query.include);
-    let result = {};
 
-    query.type !== 'barcode'
-      ? (result = await this.prisma.items.findUnique({
-          where: { id },
-          include,
-        }))
-      : (result = await this.prisma.barcodes.findUnique({
-          where: { barcode: id.toString() },
-          include: { Items: true },
-        }));
-    return result;
+    return this.prisma.itemUnits.findUnique({
+      where: { [query.type]: id },
+      include,
+    });
   }
 }

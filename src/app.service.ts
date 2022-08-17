@@ -6,6 +6,7 @@ import { ClientsService } from './models/clients/clients.service';
 import { CurrenciesService } from './models/currencies/currencies.service';
 import { DiscountCardsService } from './models/discount-cards/discount-cards.service';
 import { DivisionsService } from './models/divisions/divisions.service';
+import { ItemUnitsService } from './models/item-units/item-units.service';
 import { ItemsService } from './models/items/items.service';
 import { PricesService } from './models/prices/prices.service';
 import { UnitSetsService } from './models/units/unit-sets/unit-sets.service';
@@ -20,6 +21,7 @@ export class AppService {
     private readonly clients: ClientsService,
     private readonly discountCards: DiscountCardsService,
     private readonly items: ItemsService,
+    private readonly itemUnits: ItemUnitsService,
     private readonly unitSets: UnitSetsService,
     private readonly units: UnitsService,
     private readonly barcodes: BarcodesService,
@@ -31,7 +33,9 @@ export class AppService {
     return 'ХУШНУДБЕК зовут!';
   }
 
-  async sync() {
+  async sync(): Promise<string> {
+    console.log(new Date());
+
     let length: number;
     let offsetPagination: number;
     let limitPagination: number;
@@ -47,25 +51,31 @@ export class AppService {
 
     console.log(`Items >-------------------------------------`);
     length = 0;
-    // offsetPagination = 98000;
     offsetPagination = 0;
     limitPagination = 10000;
 
     do {
       length = await this.items.sync(offsetPagination, limitPagination);
+      offsetPagination += limitPagination;
+    } while (length === limitPagination);
 
+    console.log(`ItemUnits >---------------------------------`);
+    length = 0;
+    offsetPagination = 0;
+    limitPagination = 10000;
+
+    do {
+      length = await this.itemUnits.sync(offsetPagination, limitPagination);
       offsetPagination += limitPagination;
     } while (length === limitPagination);
 
     console.log(`Barcodes >----------------------------------`);
     length = 0;
-    // offsetPagination = 98000;
     offsetPagination = 0;
     limitPagination = 10000;
 
     do {
       length = await this.barcodes.sync(offsetPagination, limitPagination);
-
       offsetPagination += limitPagination;
     } while (length === limitPagination);
 
@@ -77,13 +87,11 @@ export class AppService {
 
     console.log(`Prices >------------------------------------`);
     length = 0;
-    // offsetPagination = 211000;
     offsetPagination = 0;
     limitPagination = 10000;
 
     do {
       length = await this.prices.sync(offsetPagination, limitPagination);
-
       offsetPagination += limitPagination;
     } while (length === limitPagination);
 
@@ -92,19 +100,18 @@ export class AppService {
 
     console.log(`Clients >-----------------------------------`);
     length = 0;
-    // offsetPagination = 4000;
     offsetPagination = 0;
     limitPagination = 10000;
 
     do {
       length = await this.clients.sync(offsetPagination, limitPagination);
-
       offsetPagination += limitPagination;
     } while (length === limitPagination);
 
     console.log(`DiscountCards >-----------------------------`);
     await this.discountCards.sync();
 
+    console.log(new Date());
     return 'Success!';
   }
 }

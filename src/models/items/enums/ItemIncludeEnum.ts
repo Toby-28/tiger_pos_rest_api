@@ -1,5 +1,7 @@
 export enum ItemIncludeEnum {
-  Brand = 'brand',
-  Unit = 'units',
-  Barcode = 'Barcodes',
+  Brands = 'Brands',
+  Units = 'Units',
+  Barcodes = 'Barcodes',
+  Prices = 'Prices',
+  _count = '_count',
 }

@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { logger: ['error'] });
 
   const config = new DocumentBuilder()
-    .setTitle('Tiger POS Central Backend API')
+    .setTitle('ASMAN POS Tiger API')
     .setDescription('NestJS API to interact Logo Tiger 3 API with easy!')
     .setVersion(process.env.APP_VERSION)
     .addTag('POS REST API')

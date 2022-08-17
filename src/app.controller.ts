@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 
 @ApiTags('sync')
@@ -12,6 +12,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  @ApiExcludeEndpoint(true)
   @Get('sync')
   async sync() {
     return this.appService.sync();

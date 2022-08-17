@@ -15,6 +15,7 @@ import { UnitsModule } from './models/units/units.module';
 import { UnitSetsModule } from './models/units/unit-sets/unit-sets.module';
 import { TaskService } from './schedule/schedule.service';
 import { SalesModule } from './models/sales/sales.module';
+import { ItemUnitsModule } from './models/item-units/item-units.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { SalesModule } from './models/sales/sales.module';
     UnitSetsModule,
     SalesModule,
     ScheduleModule.forRoot(),
+    ItemUnitsModule,
   ],
   controllers: [AppController],
   providers: [AppService, TaskService],

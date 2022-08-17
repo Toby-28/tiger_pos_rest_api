@@ -9,8 +9,8 @@ export class TaskService {
   constructor(private readonly appService: AppService) {}
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  handleCron() {
-    this.appService.sync();
+  async handleCron() {
+    await this.appService.sync();
     console.log(`\n
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     |   Syncronization successfully executed!!!   |

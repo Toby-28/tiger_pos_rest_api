@@ -10,7 +10,7 @@ datasource db {
 model Barcodes {
   id         Int      @id @default(autoincrement())
   id_        Int      @unique
-  itemId     Int      @unique
+  itemId     Int
   itemUnitId Int      @unique
   unitId     Int
   lineNr     Int
@@ -18,8 +18,9 @@ model Barcodes {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  Items Items @relation(fields: [itemId], references: [id])
-  Units Units @relation(fields: [unitId], references: [id])
+  Items         Items           @relation(fields: [itemId], references: [id])
+  Units         Units           @relation(fields: [unitId], references: [id])
+  ItemsBarcodes ItemsBarcodes[]
 
   @@map("barcodes")
 }
@@ -59,12 +60,48 @@ model Items {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  Brands   Brands?   @relation(fields: [brandId], references: [id])
-  Units    Units?    @relation(fields: [mainUnitId], references: [id])
-  Barcodes Barcodes?
-  Prices   Prices[]
+  Brands        Brands?         @relation(fields: [brandId], references: [id])
+  Units         Units?          @relation(fields: [mainUnitId], references: [id])
+  Barcodes      Barcodes[]
+  Prices        Prices[]
+  ItemsBarcodes ItemsBarcodes[]
+  ItemUnits     ItemUnits[]
 
   @@map("items")
+}
+
+model ItemUnits {
+  id              Int      @id @default(autoincrement())
+  id_             Int      @unique
+  unitId          Int?
+  itemId          Int?
+  mainUnit        Boolean?
+  lineNr          Int?
+  coefficient     Int?
+  eActive         Boolean?
+  width           Int?
+  widthUnit       String?
+  length          Int?
+  lengthUnit      String?
+  height          Int?
+  heightUnit      String?
+  area            Int?
+  areaUnit        String?
+  volume          Int?
+  volumeUnit      String?
+  weight          Int?
+  weightUnit      String?
+  grossvolume     Int?
+  grossvolumeUnit String?
+  grossweight     Int?
+  grossweightUnit String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  Unit Units? @relation(fields: [unitId], references: [id])
+  Item Items? @relation(fields: [itemId], references: [id])
+
+  @@map("item_units")
 }
 
 model Brands {
@@ -235,10 +272,11 @@ model Units {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  UnitSets UnitSets?  @relation(fields: [unitSetId], references: [id])
-  Prices   Prices[]
-  Barcodes Barcodes[]
-  Items    Items[]
+  UnitSets  UnitSets?   @relation(fields: [unitSetId], references: [id])
+  Prices    Prices[]
+  Barcodes  Barcodes[]
+  Items     Items[]
+  ItemUnits ItemUnits[]
 
   @@map("units")
 }
@@ -266,4 +304,15 @@ model Logs {
   createdAt DateTime @default(now())
 
   @@map("logs")
+}
+
+model ItemsBarcodes {
+  id        Int @id @default(autoincrement())
+  itemId    Int
+  barcodeId Int
+
+  Items    Items    @relation(fields: [itemId], references: [id])
+  Barcodes Barcodes @relation(fields: [barcodeId], references: [id])
+
+  @@map("items_barcodes")
 }
