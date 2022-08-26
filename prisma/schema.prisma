@@ -18,8 +18,8 @@ model Barcodes {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  Items         Items           @relation(fields: [itemId], references: [id])
-  Units         Units           @relation(fields: [unitId], references: [id])
+  Items         Items           @relation(fields: [itemId], references: [id_])
+  Units         Units           @relation(fields: [unitId], references: [id_])
   ItemsBarcodes ItemsBarcodes[]
 
   @@map("barcodes")
@@ -60,8 +60,8 @@ model Items {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  Brands        Brands?         @relation(fields: [brandId], references: [id])
-  Units         Units?          @relation(fields: [mainUnitId], references: [id])
+  Brands        Brands?         @relation(fields: [brandId], references: [id_])
+  Units         Units?          @relation(fields: [mainUnitId], references: [id_])
   Barcodes      Barcodes[]
   Prices        Prices[]
   ItemsBarcodes ItemsBarcodes[]
@@ -98,8 +98,8 @@ model ItemUnits {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  Unit Units? @relation(fields: [unitId], references: [id])
-  Item Items? @relation(fields: [itemId], references: [id])
+  Unit Units? @relation(fields: [unitId], references: [id_])
+  Item Items? @relation(fields: [itemId], references: [id_])
 
   @@map("item_units")
 }
@@ -130,7 +130,7 @@ model Cases {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  Currency Currencies @relation(fields: [currencyId], references: [id])
+  Currency Currencies @relation(fields: [currencyId], references: [id_])
 
   @@map("cases")
 }
@@ -256,9 +256,9 @@ model Prices {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  Items      Items      @relation(fields: [itemId], references: [id])
-  Currencies Currencies @relation(fields: [currencyId], references: [id])
-  Units      Units?     @relation(fields: [unitId], references: [id])
+  Items      Items      @relation(fields: [itemId], references: [id_])
+  Currencies Currencies @relation(fields: [currencyId], references: [id_])
+  Units      Units?     @relation(fields: [unitId], references: [id_])
 
   @@map("prices")
 }
@@ -272,7 +272,7 @@ model Units {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  UnitSets  UnitSets?   @relation(fields: [unitSetId], references: [id])
+  UnitSets  UnitSets?   @relation(fields: [unitSetId], references: [id_])
   Prices    Prices[]
   Barcodes  Barcodes[]
   Items     Items[]
@@ -311,8 +311,8 @@ model ItemsBarcodes {
   itemId    Int
   barcodeId Int
 
-  Items    Items    @relation(fields: [itemId], references: [id])
-  Barcodes Barcodes @relation(fields: [barcodeId], references: [id])
+  Items    Items    @relation(fields: [itemId], references: [id_])
+  Barcodes Barcodes @relation(fields: [barcodeId], references: [id_])
 
   @@map("items_barcodes")
 }
