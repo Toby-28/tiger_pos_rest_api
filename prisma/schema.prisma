@@ -94,7 +94,7 @@ model ItemUnits {
   grossvolume     Int?
   grossvolumeUnit String?
   grossweight     Int?
-  grossweightUnit String
+  grossweightUnit String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
